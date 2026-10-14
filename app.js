@@ -57,7 +57,7 @@ sections.forEach((item, groupIndex) => {
   button.type = 'button';
   button.className = 'nav-parent';
   button.setAttribute('aria-expanded', groupIndex === 0 ? 'true' : 'false');
-  button.innerHTML = `<span class="nav-parent__mark">+</span><span class="nav-parent__label">${item.label}</span>`;
+  button.innerHTML = `<span class="nav-parent__label">${item.label}</span><span class="nav-parent__mark">(+)</span>`;
 
   const children = document.createElement('div');
   children.className = `nav-children${groupIndex === 0 ? ' is-open' : ''}`;
