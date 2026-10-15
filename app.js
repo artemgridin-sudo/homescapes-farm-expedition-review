@@ -29,6 +29,54 @@ const creativeVideos = {
   ]
 };
 
+const asoCampaigns = {
+  'aso-expedition': {
+    slug: 'expedition',
+    stores: {
+      ios: {
+        label: 'iOS',
+        title: 'Homescapes',
+        url: 'https://apps.apple.com/us/app/homescapes/id1195621598?ppid=5bfe0c49-df34-44b3-89f6-9ad104785676'
+      },
+      gp: {
+        label: 'Google Play',
+        title: 'Homescapes: Farm Adventure',
+        url: 'https://play.google.com/store/apps/details?id=com.playrix.homescapes&listing=cpp_1257_hs_aso_shot135'
+      }
+    }
+  },
+  'aso-orders': {
+    slug: 'orders',
+    stores: {
+      ios: {
+        label: 'iOS',
+        title: 'Homescapes',
+        url: 'https://apps.apple.com/us/app/homescapes-match-3-games/id1195621598?ppid=380e943e-bb81-40a7-92e2-23bfd16a88be'
+      },
+      gp: {
+        label: 'Google Play',
+        title: 'Homescapes: Farm Adventure',
+        url: 'https://play.google.com/store/apps/details?id=com.playrix.homescapes&listing=cpp_1248_hs_aso_shot134'
+      }
+    }
+  },
+  'aso-freeze': {
+    slug: 'freeze',
+    stores: {
+      ios: {
+        label: 'iOS',
+        title: 'Homescapes',
+        url: 'https://apps.apple.com/us/app/homescapes/id1195621598?ppid=df4aecfc-aa95-4ff4-9526-bd28cecd20cd'
+      },
+      gp: {
+        label: 'Google Play',
+        title: 'Homescapes',
+        url: 'https://play.google.com/store/apps/details?id=com.playrix.homescapes&listing=cpp_1175_screenshot122v2_nv'
+      }
+    }
+  }
+};
+
 const sections = [
   {
     label: 'Креативы',
@@ -120,6 +168,31 @@ function videoCard([name, youtubeId]) {
   return article;
 }
 
+function asoStoreCard(slug, storeKey, store) {
+  const article = document.createElement('article');
+  article.className = 'store-card';
+
+  const screenshots = Array.from({ length: 6 }, (_, index) => {
+    const number = String(index + 1).padStart(2, '0');
+    return `<img src="assets/aso/${slug}/${storeKey}/${number}.webp" alt="${store.label}: скриншот ${index + 1}" loading="lazy">`;
+  }).join('');
+
+  article.innerHTML = `
+    <header class="store-card__header">
+      <a class="store-card__icon-link" href="${store.url}" target="_blank" rel="noopener noreferrer" aria-label="Открыть ${store.label} — ${store.title}">
+        <img class="store-card__icon" src="assets/aso/${slug}/${storeKey}/icon.webp" alt="Иконка ${store.title}">
+      </a>
+      <div class="store-card__identity">
+        <span class="store-card__platform">${store.label}</span>
+        <h2 class="store-card__title">${store.title}</h2>
+      </div>
+      <a class="store-card__link" href="${store.url}" target="_blank" rel="noopener noreferrer">Перейти в стор ↗</a>
+    </header>
+    <div class="store-card__screenshots">${screenshots}</div>`;
+
+  return article;
+}
+
 function render(sectionId) {
   const section = allSections.find(item => item.id === sectionId) || allSections[0];
   const fragment = template.content.cloneNode(true);
@@ -131,6 +204,16 @@ function render(sectionId) {
     const grid = document.createElement('div');
     grid.className = 'video-grid';
     videos.forEach(video => grid.append(videoCard(video)));
+    materials.append(grid);
+  }
+
+  const aso = asoCampaigns[section.id];
+  if (aso) {
+    const grid = document.createElement('div');
+    grid.className = 'store-grid';
+    Object.entries(aso.stores).forEach(([storeKey, store]) => {
+      grid.append(asoStoreCard(aso.slug, storeKey, store));
+    });
     materials.append(grid);
   }
 
